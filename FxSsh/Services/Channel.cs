@@ -48,20 +48,23 @@ namespace FxSsh.Services
         public event EventHandler EofReceived;
         public event EventHandler CloseReceived;
 
-        public void SendData(byte[] data)
+        public void SendData(byte[] data) 
         {
             Contract.Requires(data != null);
+            SendData(data, 0, data.Length);
+        }
 
-            if (data.Length == 0)
-            {
-                return;
-            }
+        public void SendData(byte[] data, long offset, long length) 
+        { 
+            Contract.Requires(data != null);
+            Contract.Requires(offset >= 0);
+            Contract.Requires(offset < length);
+            Contract.Requires(length > 0);
 
             var msg = new ChannelDataMessage();
             msg.RecipientChannel = ClientChannelId;
 
-            var total = (uint)data.Length;
-            var offset = 0L;
+            var total = (uint)(length - offset);
             byte[] buf = null;
             do
             {
