@@ -39,11 +39,35 @@ namespace FxSsh.Services
                     var pswdMsg = Message.LoadFrom<PasswordRequestMessage>(message);
                     HandleMessage(pswdMsg);
                     break;
-                case "hostbased":
                 case "none":
+                    var noneMsg = Message.LoadFrom<NoneRequestMessage>(message);
+                    HandleMessage(noneMsg);
+                    break;
+                case "hostbased":
                 default:
                     _session.SendMessage(new FailureMessage());
                     break;
+            }
+        }
+
+        private void HandleMessage(NoneRequestMessage message) {
+            var verifed = false;
+
+            var args = new UserauthArgs(_session, message.Username);
+            if (Userauth != null) {
+                Userauth(this, args);
+                verifed = args.Result;
+            }
+
+            if (verifed) {
+                _session.RegisterService(message.ServiceName, args);
+
+                Succeed?.Invoke(this, message.ServiceName);
+
+                _session.SendMessage(new SuccessMessage());
+                return;
+            } else {
+                _session.SendMessage(new FailureMessage());
             }
         }
 

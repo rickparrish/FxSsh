@@ -29,6 +29,14 @@ namespace FxSsh.Services
             Session = session;
         }
 
+        public UserauthArgs(Session session, string username) {
+            Contract.Requires(username != null);
+
+            AuthMethod = "none";
+            Username = username;
+            Session = session;
+        }
+
         public string AuthMethod { get; private set; }
         public Session Session { get; private set; }
         public string Username { get; private set; }
