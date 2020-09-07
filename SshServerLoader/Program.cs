@@ -91,7 +91,19 @@ namespace SshServerLoader
 
         static void service_Userauth(object sender, UserauthArgs e)
         {
-            Console.WriteLine("Client {0} fingerprint: {1}.", e.KeyAlgorithm, e.Fingerprint);
+            switch (e.AuthMethod) {
+                case "password":
+                    Console.WriteLine($"AuthMethod {e.AuthMethod}, Username {e.Username}, Password {e.Password}");
+                    break;
+
+                case "publickey":
+                    Console.WriteLine("AuthMethod {e.AuthMethod}, Client {0} fingerprint: {1}.", e.KeyAlgorithm, e.Fingerprint);
+                    break;
+
+                default:
+                    Console.WriteLine($"AuthMethod {e.AuthMethod}, Username {e.Username}, Password {e.Password}, Client {e.KeyAlgorithm} fingerprint: {e.Fingerprint}");
+                    break;
+            }
 
             e.Result = true;
         }

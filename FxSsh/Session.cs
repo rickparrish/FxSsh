@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
@@ -727,6 +728,12 @@ namespace FxSsh
                 _services.Add(service);
             }
             return service;
+        }
+
+        public EndPoint RemoteEndPoint {
+            get {
+                return _socket?.RemoteEndPoint;
+            }
         }
 
         private class Algorithms
