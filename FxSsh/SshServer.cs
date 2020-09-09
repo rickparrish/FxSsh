@@ -44,8 +44,11 @@ namespace FxSsh
                 _listenser = StartingInfo.LocalAddress == IPAddress.IPv6Any
                     ? TcpListener.Create(StartingInfo.Port) // dual stack
                     : new TcpListener(StartingInfo.LocalAddress, StartingInfo.Port);
-                _listenser.ExclusiveAddressUse = false;
-                _listenser.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                if (!StartingInfo.ExclusiveAddressUse) {
+                    _listenser.ExclusiveAddressUse = false;
+                    _listenser.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                }
+                _listenser.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
                 _listenser.Start();
                 BeginAcceptSocket();
 

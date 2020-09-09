@@ -13,10 +13,13 @@ namespace FxSsh
 
         public StartingInfo(IPAddress localAddress, int port, string serverBanner)
         {
+            ExclusiveAddressUse = false;
             LocalAddress = localAddress;
             Port = port;
             ServerBanner = serverBanner;
         }
+
+        public bool ExclusiveAddressUse { get; set; }
 
         public IPAddress LocalAddress { get; private set; }
         public int Port { get; private set; }
